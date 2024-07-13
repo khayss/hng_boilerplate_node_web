@@ -2,4 +2,13 @@ openapi: 3.0.0
 info:
   title: HNG Boilerplate API
   version: 1.0.0
-paths:
+servers:
+  - url: http://
+    description: Production Server
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+path:
