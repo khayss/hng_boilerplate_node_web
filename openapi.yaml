@@ -12,3 +12,91 @@ components:
       bearerFormat: JWT
       scheme: bearer
 path:
+ /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Create a new account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid input
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Sign in to account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+  /auth/social-login:
+    post:
+      tags:
+        - Auth
+      summary: Social authentication login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provider:
+                  type: string
+                token:
+                  type: string
+      responses:
+        '200':
+          description: Social login successful
+        '401':
+          description: Social login failed
+  /auth/magic-link:
+    post:
+      tags:
+        - Auth
+      summary: Request a magic link for passwordless login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Magic link sent successfully
+        '404':
+          description: Email not found
+          
