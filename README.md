@@ -2,56 +2,58 @@
 
 ## Overview
 
-The HNG Boilerplate API provides a simple, secure, and efficient way to manage user accounts and organizations. This API follows the OpenAPI specification for documentation and includes user authentication, organization management, and user settings.
+This API serves as a foundational boilerplate for building scalable applications with features including user authentication, messaging, payment integration, and a superadmin interface. It follows best practices and is structured according to the norms of the chosen framework.
 
 ## Features
 
-- User authentication (signup, login, password reset)
-- User profile management
-- Organization creation and membership management
-- JWT-based authentication
-- Activity logging and notification settings
+- **Authentication**
+  - Email and password authentication
+  - Social authentication (e.g., Google, Facebook)
+  - Magic link authentication
+  - Change password functionality
 
-## API Endpoints
+- **Messaging**
+  - Email messaging with default templates
+  - Background processing for sending emails
 
-### Authentication
+- **Payments**
+  - Integration with Stripe and Flutterwave for processing payments
+  - Support for various payment methods, including LemonSqueezy
 
-- **POST /auth/signup**: Create a new account
-- **POST /auth/login**: Sign in to the account
-- **POST /auth/forgot-password**: Initiate password reset process
-- **POST /auth/reset-password**: Reset user password
-- **GET /auth/profile**: Get user details (protected route)
+- **User and Organization Management**
+  - Manage users and organizations through a superadmin interface
+  - User profile settings and management
 
-### User Management
+- **Settings Management**
+  - Application settings and user-specific settings
+  - GDPR cookie management
 
-- **PUT /users/{id}**: Update user profile (protected route)
-- **GET /users/{id}**: Get specific user details (protected route)
-- **GET /users/{id}/settings**: Retrieve user-specific settings (protected route)
-- **PUT /users/{id}/settings**: Update user-specific settings (protected route)
-- **GET /users/{id}/activity**: Retrieve a user's activity log (protected route)
+- **Landing Pages**
+  - Privacy policy, contact us, about us, and other informational pages
 
-### Organization Management
+- **Dashboard**
+  - Basic dashboard with user activity logs
+  - Waitlist functionality (coming soon)
+  - Marketing squeeze pages and invite flow
 
-- **POST /organizations**: Create a new organization (protected route)
-- **GET /organizations/{id}**: Get organization details (protected route)
-- **PUT /organizations/{id}**: Update organization details (protected route)
-- **DELETE /organizations/{id}**: Delete an organization (protected route)
-- **POST /organizations/{id}/members**: Add members to an organization (protected route)
-- **DELETE /organizations/{id}/members/{userId}**: Remove a member from an organization (protected route)
-- **GET /organizations/{id}/members**: Get members of an organization (protected route)
-- **GET /organizations/search**: Search for organizations (public)
+- **Data Management**
+  - User data export
+  - Random data generation and display on dashboards
+  - Data list with search and sorting capabilities
+  - Chart page for visualizing user data
 
-## Database Design
+- **Notifications and Blog**
+  - User notifications
+  - Blog management and posts
 
-The database includes the following tables:
+- **Database Design**
+  The database design is store an image in the root directory (db_design.jpeg).
 
-- **Users**: Stores user details and authentication information.
-- **Organizations**: Contains organization information.
-- **Organization Members**: Manages user memberships in organizations.
-- **Settings**: Stores user-specific settings.
-- **Notifications**: Handles notifications for users.
-- **User Activity**: Logs user activities for auditing.
-- **Database Design**: The database design is store an image in the root directory (db_design.jpeg).
+## API Documentation
+
+The API follows the OpenAPI specification. You can view the interactive documentation and test endpoints using the link below.
+[Documentation](https://test002.otecfx.com/documentation/#/)
+
 
 ## Setup Instructions
 
