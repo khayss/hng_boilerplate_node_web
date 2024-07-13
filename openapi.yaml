@@ -225,3 +225,141 @@ path:
       responses:
         '200':
           description: Application settings retrieved
+/messages/send:
+    post:
+      tags:
+        - Messaging
+      summary: Send an email message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                to:
+                  type: string
+                  format: email
+                subject:
+                  type: string
+                body:
+                  type: string
+      responses:
+        '200':
+          description: Email sent successfully
+        '400':
+          description: Invalid email or input
+  /payments/stripe:
+    post:
+      tags:
+        - Payments
+      summary: Process payment via Stripe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                currency:
+                  type: string
+                source:
+                  type: string
+      responses:
+        '200':
+          description: Payment processed successfully
+        '400':
+          description: Payment processing failed
+  /payments/flutterwave:
+    post:
+      tags:
+        - Payments
+      summary: Process payment via Flutterwave
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                currency:
+                  type: string
+                tx_ref:
+                  type: string
+      responses:
+        '200':
+          description: Payment processed successfully
+        '400':
+          description: Payment processing failed
+          /landing/privacy-policy:
+    get:
+      tags:
+        - Landing Pages
+      summary: Get privacy policy
+      responses:
+        '200':
+          description: Privacy policy retrieved
+  /landing/contact-us:
+    get:
+      tags:
+        - Landing Pages
+      summary: Get contact us page
+      responses:
+        '200':
+          description: Contact us page retrieved
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get user notifications
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Notifications retrieved
+  /blog:
+    get:
+      tags:
+        - Blog
+      summary: Get blog posts
+      responses:
+        '200':
+          description: Blog posts retrieved
+  /invite:
+    post:
+      tags:
+        - Invite
+      summary: Send an invite link to user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Invite sent successfully
+  /language:
+    get:
+      tags:
+        - Settings
+      summary: Retrieve available languages and regions
+      responses:
+        '200':
+          description: Languages and regions retrieved
+  /admin/email-templates:
+    get:
+      tags:
+        - Superadmin
+      summary: Manage email templates
+      responses:
+        '200':
+          description: Email templates retrieved
