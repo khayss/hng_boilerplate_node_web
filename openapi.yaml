@@ -150,3 +150,40 @@ path:
       responses:
         '204':
           description: Organization deleted
+          /organizations/{id}/members:
+    post:
+      summary: Add members to an organization
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+        responses:
+          '200':
+            description: Member added
+    delete:
+      summary: Remove a member from an organization
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Member removed
+    get:
+      summary: Get members of an organization
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Organization members retrieved
+  /organizations/search:
+    get:
+      summary: Search for organizations
+      responses:
+        '200':
+          description: Organizations retrieved
