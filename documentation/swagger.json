@@ -50,22 +50,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "User created successfully",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            },
-                            "X-Expires-After": {
-                                "description": "date in UTC when token expires",
-                                "schema": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                }
-                            }
-                        }
+                        "description": "User created successfully"
                     },
                     "400": {
                         "description": "Invalid input"
@@ -100,22 +85,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login successful",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            },
-                            "X-Expires-After": {
-                                "description": "date in UTC when token expires",
-                                "schema": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                }
-                            }
-                        }
+                        "description": "Login successful"
                     },
                     "401": {
                         "description": "Invalid credentials"
@@ -123,12 +93,46 @@
                 }
             }
         },
-        "/auth/forgot-password": {
+        "/auth/social-login": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Initiate password reset",
+                "summary": "Social authentication login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "provider": {
+                                        "type": "string"
+                                    },
+                                    "token": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Social login successful"
+                    },
+                    "401": {
+                        "description": "Social login failed"
+                    }
+                }
+            }
+        },
+        "/auth/magic-link": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Request a magic link for passwordless login",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -147,15 +151,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Password reset email sent",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
+                        "description": "Magic link sent successfully"
                     },
                     "404": {
                         "description": "Email not found"
@@ -163,12 +159,17 @@
                 }
             }
         },
-        "/auth/reset-password": {
+        "/users/{id}/change-password": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Reset user password",
+                "summary": "Change user password",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -176,7 +177,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "token": {
+                                    "oldPassword": {
                                         "type": "string"
                                     },
                                     "newPassword": {
@@ -189,26 +190,148 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Password reset successful",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
+                        "description": "Password changed successfully"
                     },
                     "400": {
-                        "description": "Invalid token or password"
+                        "description": "Invalid old password"
                     }
                 }
             }
         },
-        "/auth/profile": {
+        "/messages/send": {
+            "post": {
+                "tags": [
+                    "Messaging"
+                ],
+                "summary": "Send an email message",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "to": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "subject": {
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully"
+                    },
+                    "400": {
+                        "description": "Invalid email or input"
+                    }
+                }
+            }
+        },
+        "/payments/stripe": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Process payment via Stripe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer"
+                                    },
+                                    "currency": {
+                                        "type": "string"
+                                    },
+                                    "source": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment processed successfully"
+                    },
+                    "400": {
+                        "description": "Payment processing failed"
+                    }
+                }
+            }
+        },
+        "/payments/flutterwave": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Process payment via Flutterwave",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer"
+                                    },
+                                    "currency": {
+                                        "type": "string"
+                                    },
+                                    "tx_ref": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment processed successfully"
+                    },
+                    "400": {
+                        "description": "Payment processing failed"
+                    }
+                }
+            }
+        },
+        "/users": {
             "get": {
                 "tags": [
-                    "Auth"
+                    "Users"
+                ],
+                "summary": "Retrieve all users",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Users retrieved"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
                 ],
                 "summary": "Get user details",
                 "security": [
@@ -218,33 +341,144 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User details retrieved",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
+                        "description": "User details retrieved"
                     },
-                    "401": {
-                        "description": "Unauthorized"
+                    "404": {
+                        "description": "User not found"
                     }
                 }
             }
         },
-        "/users/{id}": {
-            "put": {
+        "/admin/users": {
+            "get": {
                 "tags": [
-                    "Users"
+                    "Superadmin"
                 ],
-                "summary": "Update user profile",
+                "summary": "Retrieve all users for admin",
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "Admin users retrieved"
+                    }
+                }
+            }
+        },
+        "/admin/organizations": {
+            "get": {
+                "tags": [
+                    "Superadmin"
+                ],
+                "summary": "Retrieve all organizations",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Organizations retrieved"
+                    }
+                }
+            }
+        },
+        "/settings/profile": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Retrieve user profile settings",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Profile settings retrieved"
+                    }
+                }
+            }
+        },
+        "/settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "summary": "Retrieve application settings",
+                "responses": {
+                    "200": {
+                        "description": "Application settings retrieved"
+                    }
+                }
+            }
+        },
+        "/landing/privacy-policy": {
+            "get": {
+                "tags": [
+                    "Landing Pages"
+                ],
+                "summary": "Get privacy policy",
+                "responses": {
+                    "200": {
+                        "description": "Privacy policy retrieved"
+                    }
+                }
+            }
+        },
+        "/landing/contact-us": {
+            "get": {
+                "tags": [
+                    "Landing Pages"
+                ],
+                "summary": "Get contact us page",
+                "responses": {
+                    "200": {
+                        "description": "Contact us page retrieved"
+                    }
+                }
+            }
+        },
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get user notifications",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notifications retrieved"
+                    }
+                }
+            }
+        },
+        "/blog": {
+            "get": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Get blog posts",
+                "responses": {
+                    "200": {
+                        "description": "Blog posts retrieved"
+                    }
+                }
+            }
+        },
+        "/invite": {
+            "post": {
+                "tags": [
+                    "Invite"
+                ],
+                "summary": "Send an invite link to user",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -252,9 +486,6 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    },
                                     "email": {
                                         "type": "string",
                                         "format": "email"
@@ -266,379 +497,33 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Profile updated",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Get specific user details",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User details retrieved",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "User not found"
+                        "description": "Invite sent successfully"
                     }
                 }
             }
         },
-        "/users/{id}/settings": {
+        "/language": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Settings"
                 ],
-                "summary": "Retrieve user-specific settings",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
+                "summary": "Retrieve available languages and regions",
                 "responses": {
                     "200": {
-                        "description": "User settings retrieved",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update user-specific settings",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "setting_key": {
-                                        "type": "string"
-                                    },
-                                    "setting_value": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Settings updated",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
+                        "description": "Languages and regions retrieved"
                     }
                 }
             }
         },
-        "/users/{id}/activity": {
+        "/admin/email-templates": {
             "get": {
                 "tags": [
-                    "Users"
+                    "Superadmin"
                 ],
-                "summary": "Retrieve user's activity log",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
+                "summary": "Manage email templates",
                 "responses": {
                     "200": {
-                        "description": "Activity log retrieved",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/organizations": {
-            "post": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Create a new organization",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Organization created",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/organizations/{id}": {
-            "get": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Get organization details",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Organization details retrieved",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Organization not found"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Update organization details",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Organization updated",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Delete an organization",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Organization deleted",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/organizations/{id}/members": {
-            "post": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Add members to an organization",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "userId": {
-                                        "type": "integer"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Member added",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Remove a member from an organization",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Member removed",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Get members of an organization",
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Organization members retrieved",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/organizations/search": {
-            "get": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Search for organizations",
-                "responses": {
-                    "200": {
-                        "description": "Organizations retrieved",
-                        "headers": {
-                            "X-Rate-Limit": {
-                                "description": "calls per hour allowed by the user",
-                                "schema": {
-                                    "type": "integer"
-                                }
-                            }
-                        }
+                        "description": "Email templates retrieved"
                     }
                 }
             }
