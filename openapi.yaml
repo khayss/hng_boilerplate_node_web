@@ -99,4 +99,54 @@ path:
           description: Magic link sent successfully
         '404':
           description: Email not found
-          
+
+/organizations:
+    post:
+      summary: Create a new organization
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+        responses:
+          '201':
+            description: Organization created
+  /organizations/{id}:
+    get:
+      summary: Get organization details
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Organization details retrieved
+        '404':
+          description: Organization not found
+    put:
+      summary: Update organization details
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+        responses:
+          '200':
+            description: Organization updated
+    delete:
+      summary: Delete an organization
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Organization deleted
