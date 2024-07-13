@@ -187,3 +187,41 @@ path:
       responses:
         '200':
           description: Organizations retrieved
+/admin/users:
+    get:
+      tags:
+        - Superadmin
+      summary: Retrieve all users for admin
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Admin users retrieved
+  /admin/organizations:
+    get:
+      tags:
+        - Superadmin
+      summary: Retrieve all organizations
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Organizations retrieved
+  /settings/profile:
+    get:
+      tags:
+        - Settings
+      summary: Retrieve user profile settings
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profile settings retrieved
+  /settings:
+    get:
+      tags:
+        - Settings
+      summary: Retrieve application settings
+      responses:
+        '200':
+          description: Application settings retrieved
