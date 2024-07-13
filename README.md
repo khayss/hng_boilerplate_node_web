@@ -1,51 +1,66 @@
-# HNG Boilerplate API
+# HNG Boilerplate API - Users
 
-## Overview
+This section describes the API endpoints related to user management in the HNG Boilerplate API.
 
-This API serves as a foundational boilerplate for building scalable applications with features including user authentication, messaging, payment integration, and a superadmin interface. It follows best practices and is structured according to the norms of the chosen framework.
+## Users API Endpoints
 
-## Features
+### 1. Retrieve User Profile
+- **Endpoint:** `GET /users/{id}/profile`
+- **Description:** Retrieve user profile information.
+- **Security:** Requires Bearer Token
+- **Responses:**
+  - `200`: User profile retrieved successfully.
+  - `404`: User not found.
 
-- **Authentication**
-  - Email and password authentication
-  - Social authentication (e.g., Google, Facebook)
-  - Magic link authentication
-  - Change password functionality
+---
 
-- **Messaging**
-  - Email messaging with default templates
-  - Background processing for sending emails
+### 2. Deactivate User Account
+- **Endpoint:** `POST /users/{id}/deactivate`
+- **Description:** Deactivate a user account.
+- **Security:** Requires Bearer Token
+- **Responses:**
+  - `204`: User account deactivated successfully.
+  - `404`: User not found.
 
-- **Payments**
-  - Integration with Stripe and Flutterwave for processing payments
-  - Support for various payment methods, including LemonSqueezy
+---
 
-- **User and Organization Management**
-  - Manage users and organizations through a superadmin interface
-  - User profile settings and management
+### 3. Reactivate User Account
+- **Endpoint:** `POST /users/{id}/reactivate`
+- **Description:** Reactivate a deactivated user account.
+- **Security:** Requires Bearer Token
+- **Responses:**
+  - `204`: User account reactivated successfully.
+  - `404`: User not found.
 
-- **Settings Management**
-  - Application settings and user-specific settings
-  - GDPR cookie management
+---
 
-- **Landing Pages**
-  - Privacy policy, contact us, about us, and other informational pages
+### 4. Get User Notifications
+- **Endpoint:** `GET /users/{id}/notifications`
+- **Description:** Get user notifications.
+- **Security:** Requires Bearer Token
+- **Responses:**
+  - `200`: User notifications retrieved successfully.
 
-- **Dashboard**
-  - Basic dashboard with user activity logs
-  - Waitlist functionality (coming soon)
-  - Marketing squeeze pages and invite flow
+---
 
-- **Data Management**
-  - User data export
-  - Random data generation and display on dashboards
-  - Data list with search and sorting capabilities
-  - Chart page for visualizing user data
+### 5. Retrieve User Settings
+- **Endpoint:** `GET /users/{id}/settings`
+- **Description:** Retrieve user-specific settings.
+- **Security:** Requires Bearer Token
+- **Responses:**
+  - `200`: User settings retrieved successfully.
 
-- **Notifications and Blog**
-  - User notifications
-  - Blog management and posts
-
+### 6. Update User Settings
+- **Endpoint:** `PUT /users/{id}/settings`
+- **Description:** Update user-specific settings.
+- **Security:** Requires Bearer Token
+- **Request Body:**
+```json
+{
+    "setting_key": "string",
+    "setting_value": "string"
+}
+F
 - **Database Design**
   The database design is store an image in the root directory (db_design.jpeg).
 
